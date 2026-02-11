@@ -1,335 +1,383 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Wrench, 
-  Ruler, 
-  Award, 
-  TrendingUp, 
-  Zap, 
-  Cpu, 
-  ChevronDown, 
-  ChevronUp,
-  ArrowRight,
-  Info,
-  Share2,
-  MousePointer
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolução Tecnológica SENAI</title>
+    
+    <!-- Carregando Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Carregando React e ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
+    <!-- Carregando Babel para traduzir JSX no navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-// Dados da linha do tempo
-const timelineData = [
-  {
-    id: 1,
-    period: "Décadas de 40 a 60",
-    title: "Assistência Técnica Artesanal",
-    icon: <Wrench className="w-6 h-6 md:w-8 md:h-8 text-white" />,
-    focus: "Instalação de máquinas e manutenção básica.",
-    context: "O Brasil vivia a substituição de importações. O SENAI ensinava a 'fazer funcionar' o maquinário vindo da Europa e EUA. Era a pura transmissão de know-how operacional.",
-    highlight: "Manutenção & Instalação"
-  },
-  {
-    id: 2,
-    period: "Décadas de 70 e 80",
-    title: "A Era da ATT",
-    subtitle: "(Assistência Técnica Tecnológica)",
-    icon: <Ruler className="w-6 h-6 md:w-8 md:h-8 text-white" />,
-    focus: "Normalização, metrologia e controle de qualidade.",
-    context: "A ATT se formaliza. O SENAI deixa de apenas consertar e passa a medir. Nascem os laboratórios de ensaios para garantir que produtos brasileiros seguissem normas técnicas.",
-    highlight: "Metrologia & Normas"
-  },
-  {
-    id: 3,
-    period: "Década de 90",
-    title: "Qualidade Total e ISO",
-    icon: <Award className="w-6 h-6 md:w-8 md:h-8 text-white" />,
-    focus: "Gestão e produtividade (Metodologia Japonesa).",
-    context: "Abertura de mercado. Programas de Círculos de Controle de Qualidade (CCQ) e preparação para ISO 9000. Foco em reduzir desperdícios para competir com importados.",
-    highlight: "Gestão da Qualidade"
-  },
-  {
-    id: 4,
-    period: "Anos 2000 a 2010",
-    title: "Manufatura Enxuta (Lean)",
-    icon: <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-white" />,
-    focus: "Lean Manufacturing.",
-    context: "Consolidação do apoio à competitividade. O objetivo era eliminar gargalos físicos no chão de fábrica (estoque, movimentação) sem grandes investimentos em máquinas.",
-    highlight: "Eficiência Operacional"
-  },
-  {
-    id: 5,
-    period: "2016 - 2019",
-    title: "Brasil Mais Produtivo 1.0",
-    icon: <Zap className="w-6 h-6 md:w-8 md:h-8 text-white" />,
-    focus: "Ganhos rápidos de produtividade (mínimo de 20%).",
-    context: "Parceria Governo Federal e SENAI. Aplicação de Lean Manufacturing em ciclos curtos de consultoria. Metodologia padronizada nacionalmente.",
-    highlight: "Consultoria de Impacto Rápido"
-  },
-  {
-    id: 6,
-    period: "2020 - Presente",
-    title: "Indústria 4.0 / Brasil Mais",
-    icon: <Cpu className="w-6 h-6 md:w-8 md:h-8 text-white" />,
-    focus: "Transformação Digital e Eficiência Energética.",
-    context: "Jornada completa: do Lean à Digitalização. Implementação de sensores, IoT, análise de dados e soluções de Indústria 4.0 via plataforma Brasil Mais Produtivo.",
-    highlight: "Transformação Digital"
-  }
-];
+    <style>
+        /* Ajustes finos de fonte e seleção */
+        body { font-family: 'Inter', sans-serif; }
+        ::selection { background-color: #dbeafe; }
+    </style>
+</head>
+<body class="bg-white text-slate-900">
+    <div id="root"></div>
 
-// Componente de Cartão da Linha do Tempo
-const TimelineCard = ({ data, isActive, onClick, isLeft }) => {
-  return (
-    <div 
-      className={`relative flex items-center justify-between mb-8 md:mb-12 w-full ${isLeft ? 'md:flex-row-reverse' : ''}`}
-    >
-      {/* Spacer for desktop layout balance */}
-      <div className="hidden md:block w-5/12" />
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-      {/* Central Line Node (Left aligned on mobile, Center on Desktop) */}
-      <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 flex items-center justify-center z-10">
-        <button
-          onClick={onClick}
-          aria-label={`Expandir detalhes de ${data.title}`}
-          className={`w-10 h-10 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all duration-500 border-4 cursor-pointer ${
-            isActive 
-              ? 'bg-blue-600 border-blue-200 scale-110 shadow-[0_0_20px_rgba(37,99,235,0.5)]' 
-              : 'bg-slate-300 border-white hover:bg-slate-400'
-          }`}
-        >
-          {data.icon}
-        </button>
-      </div>
+        // --- ÍCONES SVG (Substituindo dependência externa para garantir funcionamento) ---
+        const IconWrench = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        );
+        const IconRuler = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+        );
+        const IconAward = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        );
+        const IconTrendingUp = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        );
+        const IconZap = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        );
+        const IconCpu = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+        );
+        const IconChevronDown = ({ className, size }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"/></svg>
+        );
+        const IconChevronUp = ({ className, size }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="18 15 12 9 6 15"/></svg>
+        );
+        const IconArrowRight = ({ className, size }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        );
+        const IconInfo = ({ className, size }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        );
+        const IconShare2 = ({ className, size }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        );
+        const IconMousePointer = ({ className, size }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></svg>
+        );
 
-      {/* Content Card */}
-      <div 
-        className={`w-full md:w-5/12 pl-14 md:pl-0 ${isLeft ? 'md:pr-12 md:text-right' : 'md:pl-12 md:text-left'}`}
-      >
-        <div 
-          onClick={onClick}
-          className={`cursor-pointer bg-white rounded-xl p-5 md:p-6 transition-all duration-500 border border-slate-100 relative overflow-hidden group ${
-            isActive 
-              ? 'shadow-xl translate-y-[-2px] ring-1 ring-blue-100' 
-              : 'shadow-sm hover:shadow-md'
-          }`}
-        >
-          {/* Mobile Tap Hint */}
-          {!isActive && (
-            <div className="absolute top-2 right-2 text-blue-300 md:hidden opacity-0 group-hover:opacity-100 transition-opacity">
-               <MousePointer size={16} />
-            </div>
-          )}
+        // --- DADOS ---
+        const timelineData = [
+            {
+                id: 1,
+                period: "Décadas de 40 a 60",
+                title: "Assistência Técnica Artesanal",
+                icon: <IconWrench className="w-6 h-6 md:w-8 md:h-8 text-white" />,
+                focus: "Instalação de máquinas e manutenção básica.",
+                context: "O Brasil vivia a substituição de importações. O SENAI ensinava a 'fazer funcionar' o maquinário vindo da Europa e EUA. Era a pura transmissão de know-how operacional.",
+                highlight: "Manutenção & Instalação"
+            },
+            {
+                id: 2,
+                period: "Décadas de 70 e 80",
+                title: "A Era da ATT",
+                subtitle: "(Assistência Técnica Tecnológica)",
+                icon: <IconRuler className="w-6 h-6 md:w-8 md:h-8 text-white" />,
+                focus: "Normalização, metrologia e controle de qualidade.",
+                context: "A ATT se formaliza. O SENAI deixa de apenas consertar e passa a medir. Nascem os laboratórios de ensaios para garantir que produtos brasileiros seguissem normas técnicas.",
+                highlight: "Metrologia & Normas"
+            },
+            {
+                id: 3,
+                period: "Década de 90",
+                title: "Qualidade Total e ISO",
+                icon: <IconAward className="w-6 h-6 md:w-8 md:h-8 text-white" />,
+                focus: "Gestão e produtividade (Metodologia Japonesa).",
+                context: "Abertura de mercado. Programas de Círculos de Controle de Qualidade (CCQ) e preparação para ISO 9000. Foco em reduzir desperdícios para competir com importados.",
+                highlight: "Gestão da Qualidade"
+            },
+            {
+                id: 4,
+                period: "Anos 2000 a 2010",
+                title: "Manufatura Enxuta (Lean)",
+                icon: <IconTrendingUp className="w-6 h-6 md:w-8 md:h-8 text-white" />,
+                focus: "Lean Manufacturing.",
+                context: "Consolidação do apoio à competitividade. O objetivo era eliminar gargalos físicos no chão de fábrica (estoque, movimentação) sem grandes investimentos em máquinas.",
+                highlight: "Eficiência Operacional"
+            },
+            {
+                id: 5,
+                period: "2016 - 2019",
+                title: "Brasil Mais Produtivo 1.0",
+                icon: <IconZap className="w-6 h-6 md:w-8 md:h-8 text-white" />,
+                focus: "Ganhos rápidos de produtividade (mínimo de 20%).",
+                context: "Parceria Governo Federal e SENAI. Aplicação de Lean Manufacturing em ciclos curtos de consultoria. Metodologia padronizada nacionalmente.",
+                highlight: "Consultoria de Impacto Rápido"
+            },
+            {
+                id: 6,
+                period: "2020 - Presente",
+                title: "Indústria 4.0 / Brasil Mais",
+                icon: <IconCpu className="w-6 h-6 md:w-8 md:h-8 text-white" />,
+                focus: "Transformação Digital e Eficiência Energética.",
+                context: "Jornada completa: do Lean à Digitalização. Implementação de sensores, IoT, análise de dados e soluções de Indústria 4.0 via plataforma Brasil Mais Produtivo.",
+                highlight: "Transformação Digital"
+            }
+        ];
 
-          <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] md:text-xs font-bold mb-2 uppercase tracking-wider">
-            {data.period}
-          </span>
-          
-          <h3 className="text-lg md:text-2xl font-bold text-slate-800 mb-1 leading-tight">
-            {data.title}
-          </h3>
-          {data.subtitle && (
-            <span className="block text-xs md:text-sm text-slate-500 font-medium mb-2">{data.subtitle}</span>
-          )}
-          
-          <div className={`transition-all duration-500 overflow-hidden ${isActive ? 'max-h-[500px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
-            <div className="space-y-4">
-              <div>
-                <h4 className="text-blue-600 font-bold text-xs uppercase tracking-wide mb-1 flex items-center gap-2">
-                  {isLeft && <div className="hidden md:block flex-1 h-[1px] bg-blue-100"></div>}
-                  Foco Principal
-                  {!isLeft && <div className="hidden md:block flex-1 h-[1px] bg-blue-100"></div>}
-                </h4>
-                <p className="text-slate-700 text-sm md:text-base leading-relaxed font-medium">
-                  {data.focus}
-                </p>
-              </div>
-              
-              <div className="bg-slate-50 p-3 md:p-4 rounded-lg border-l-4 border-blue-600">
-                <h4 className="text-slate-400 font-bold text-[10px] uppercase tracking-wide mb-1 flex items-center gap-1">
-                  <Info size={12}/> Contexto Histórico
-                </h4>
-                <p className="text-slate-600 text-xs md:text-sm leading-relaxed">
-                  {data.context}
-                </p>
-              </div>
+        // --- COMPONENTES ---
+        const TimelineCard = ({ data, isActive, onClick, isLeft }) => {
+            return (
+                <div className={`relative flex items-center justify-between mb-8 md:mb-12 w-full ${isLeft ? 'md:flex-row-reverse' : ''}`}>
+                    <div className="hidden md:block w-5/12" />
 
-              <div className="pt-3 border-t border-slate-100 flex items-center gap-2 text-blue-700 font-semibold text-xs md:text-sm">
-                 <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
-                 {data.highlight}
-              </div>
-            </div>
-          </div>
+                    <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 flex items-center justify-center z-10">
+                        <button
+                            onClick={onClick}
+                            aria-label={`Expandir detalhes de ${data.title}`}
+                            className={`w-10 h-10 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all duration-500 border-4 cursor-pointer ${
+                                isActive 
+                                ? 'bg-blue-600 border-blue-200 scale-110 shadow-[0_0_20px_rgba(37,99,235,0.5)]' 
+                                : 'bg-slate-300 border-white hover:bg-slate-400'
+                            }`}
+                        >
+                            {data.icon}
+                        </button>
+                    </div>
 
-          {!isActive && (
-             <div className="mt-2 flex items-center justify-end md:justify-start gap-1 text-slate-400 text-xs font-medium">
-               <span className="hidden md:inline">Ver detalhes</span>
-               <span className="md:hidden">Toque para expandir</span>
-               <ChevronDown size={14} />
-             </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+                    <div className={`w-full md:w-5/12 pl-14 md:pl-0 ${isLeft ? 'md:pr-12 md:text-right' : 'md:pl-12 md:text-left'}`}>
+                        <div 
+                            onClick={onClick}
+                            className={`cursor-pointer bg-white rounded-xl p-5 md:p-6 transition-all duration-500 border border-slate-100 relative overflow-hidden group ${
+                                isActive 
+                                ? 'shadow-xl translate-y-[-2px] ring-1 ring-blue-100' 
+                                : 'shadow-sm hover:shadow-md'
+                            }`}
+                        >
+                            {!isActive && (
+                                <div className="absolute top-2 right-2 text-blue-300 md:hidden opacity-0 group-hover:opacity-100 transition-opacity">
+                                <IconMousePointer size={16} />
+                                </div>
+                            )}
 
-const IntroSection = () => (
-  <section className="mb-12 md:mb-20 bg-gradient-to-br from-blue-50 to-white p-6 md:p-10 rounded-2xl border border-blue-100">
-    <div className="flex flex-col md:flex-row gap-6 items-start">
-      <div className="flex-1">
-        <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-4">
-          A Jornada da Eficiência Industrial
-        </h2>
-        <p className="text-slate-600 text-sm md:text-base leading-relaxed mb-4">
-          A evolução da <strong>Assistência Técnica Tecnológica (ATT)</strong> até o atual <strong>Brasil Mais Produtivo</strong> reflete o amadurecimento da indústria brasileira. 
-        </p>
-        <p className="text-slate-600 text-sm md:text-base leading-relaxed">
-          O que começou como ajustes manuais para "fazer a máquina girar" transformou-se em uma complexa rede de inteligência de dados e digitalização. Acompanhe abaixo como cada década trouxe uma nova camada de sofisticação tecnológica.
-        </p>
-      </div>
-      <div className="w-full md:w-auto bg-white p-4 rounded-xl shadow-sm border border-slate-100 min-w-[200px]">
-        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Legenda do Infográfico</h3>
-        <ul className="space-y-3">
-          <li className="flex items-center gap-2 text-xs text-slate-600">
-            <span className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white"><Wrench size={12}/></span>
-            <span>Marco Tecnológico</span>
-          </li>
-          <li className="flex items-center gap-2 text-xs text-slate-600">
-            <span className="w-6 h-6 rounded-full bg-slate-300 flex items-center justify-center text-white"></span>
-            <span>Fase Anterior/Posterior</span>
-          </li>
-          <li className="flex items-center gap-2 text-xs text-slate-600">
-            <MousePointer size={14} className="text-slate-400"/>
-            <span>Interativo: Clique para ver</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-);
+                            <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] md:text-xs font-bold mb-2 uppercase tracking-wider">
+                                {data.period}
+                            </span>
+                            
+                            <h3 className="text-lg md:text-2xl font-bold text-slate-800 mb-1 leading-tight">
+                                {data.title}
+                            </h3>
+                            {data.subtitle && (
+                                <span className="block text-xs md:text-sm text-slate-500 font-medium mb-2">{data.subtitle}</span>
+                            )}
+                            
+                            <div className={`transition-all duration-500 overflow-hidden ${isActive ? 'max-h-[500px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                                <div className="space-y-4">
+                                    <div>
+                                        <h4 className="text-blue-600 font-bold text-xs uppercase tracking-wide mb-1 flex items-center gap-2">
+                                            {isLeft && <div className="hidden md:block flex-1 h-[1px] bg-blue-100"></div>}
+                                            Foco Principal
+                                            {!isLeft && <div className="hidden md:block flex-1 h-[1px] bg-blue-100"></div>}
+                                        </h4>
+                                        <p className="text-slate-700 text-sm md:text-base leading-relaxed font-medium">
+                                            {data.focus}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="bg-slate-50 p-3 md:p-4 rounded-lg border-l-4 border-blue-600">
+                                        <h4 className="text-slate-400 font-bold text-[10px] uppercase tracking-wide mb-1 flex items-center gap-1">
+                                            <IconInfo size={12}/> Contexto Histórico
+                                        </h4>
+                                        <p className="text-slate-600 text-xs md:text-sm leading-relaxed">
+                                            {data.context}
+                                        </p>
+                                    </div>
 
-const App = () => {
-  const [activeId, setActiveId] = useState(1);
-  const [autoPlay, setAutoPlay] = useState(false);
+                                    <div className="pt-3 border-t border-slate-100 flex items-center gap-2 text-blue-700 font-semibold text-xs md:text-sm">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                                        {data.highlight}
+                                    </div>
+                                </div>
+                            </div>
 
-  useEffect(() => {
-    let interval;
-    if (autoPlay) {
-      interval = setInterval(() => {
-        setActiveId(prev => {
-          if (prev === timelineData.length) {
-            setAutoPlay(false); // Stop at end
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, 5000); // Slower for reading time
-    }
-    return () => clearInterval(interval);
-  }, [autoPlay]);
+                            {!isActive && (
+                                <div className="mt-2 flex items-center justify-end md:justify-start gap-1 text-slate-400 text-xs font-medium">
+                                    <span className="hidden md:inline">Ver detalhes</span>
+                                    <span className="md:hidden">Toque para expandir</span>
+                                    <IconChevronDown size={14} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
 
-  return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 pb-24">
-      {/* Header */}
-      <header className="sticky top-0 w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm transition-all">
-        <div className="max-w-5xl mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-lg md:text-2xl font-extrabold tracking-tight text-slate-900">
-              Evolução <span className="text-blue-600">SENAI</span>
-            </h1>
-          </div>
-          
-          <div className="flex gap-2">
-            <button
-              onClick={() => setAutoPlay(!autoPlay)}
-              className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
-                autoPlay 
-                  ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
-                  : 'bg-slate-900 text-white hover:bg-slate-800'
-              }`}
-            >
-              {autoPlay ? 'Pausar' : 'Iniciar Tour'}
-              {autoPlay ? <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"/> : <ArrowRight size={14} />}
-            </button>
-          </div>
-        </div>
-      </header>
+        const IntroSection = () => (
+            <section className="mb-12 md:mb-20 bg-gradient-to-br from-blue-50 to-white p-6 md:p-10 rounded-2xl border border-blue-100">
+                <div className="flex flex-col md:flex-row gap-6 items-start">
+                    <div className="flex-1">
+                        <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-4">
+                            A Jornada da Eficiência Industrial
+                        </h2>
+                        <p className="text-slate-600 text-sm md:text-base leading-relaxed mb-4">
+                            A evolução da <strong>Assistência Técnica Tecnológica (ATT)</strong> até o atual <strong>Brasil Mais Produtivo</strong> reflete o amadurecimento da indústria brasileira. 
+                        </p>
+                        <p className="text-slate-600 text-sm md:text-base leading-relaxed">
+                            O que começou como ajustes manuais para "fazer a máquina girar" transformou-se em uma complexa rede de inteligência de dados e digitalização. Acompanhe abaixo como cada década trouxe uma nova camada de sofisticação tecnológica.
+                        </p>
+                    </div>
+                    <div className="w-full md:w-auto bg-white p-4 rounded-xl shadow-sm border border-slate-100 min-w-[200px]">
+                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Legenda do Infográfico</h3>
+                        <ul className="space-y-3">
+                            <li className="flex items-center gap-2 text-xs text-slate-600">
+                                <span className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                                    <IconWrench className="w-3 h-3"/>
+                                </span>
+                                <span>Marco Tecnológico</span>
+                            </li>
+                            <li className="flex items-center gap-2 text-xs text-slate-600">
+                                <span className="w-6 h-6 rounded-full bg-slate-300 flex items-center justify-center text-white"></span>
+                                <span>Fase Anterior/Posterior</span>
+                            </li>
+                            <li className="flex items-center gap-2 text-xs text-slate-600">
+                                <IconMousePointer size={14} className="text-slate-400"/>
+                                <span>Interativo: Clique para ver</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        );
 
-      {/* Main Content */}
-      <main className="pt-8 px-4 md:px-8 max-w-5xl mx-auto">
-        
-        <IntroSection />
+        const App = () => {
+            const [activeId, setActiveId] = useState(1);
+            const [autoPlay, setAutoPlay] = useState(false);
 
-        <div className="relative pl-4 md:pl-0">
-          
-          {/* Vertical Line Container */}
-          <div className="absolute left-[19px] md:left-1/2 transform md:-translate-x-1/2 top-4 bottom-12 w-1 bg-slate-100 rounded-full">
-            <div 
-              className="absolute top-0 w-full bg-blue-600 rounded-full transition-all duration-1000 ease-in-out"
-              style={{ height: `${((activeId - 0.5) / timelineData.length) * 100}%` }}
-            />
-          </div>
+            useEffect(() => {
+                let interval;
+                if (autoPlay) {
+                    interval = setInterval(() => {
+                        setActiveId(prev => {
+                            if (prev === timelineData.length) {
+                                setAutoPlay(false); 
+                                return prev;
+                            }
+                            return prev + 1;
+                        });
+                    }, 5000); 
+                }
+                return () => clearInterval(interval);
+            }, [autoPlay]);
 
-          {/* Timeline Items */}
-          <div className="relative pb-12">
-            {timelineData.map((item, index) => (
-              <TimelineCard 
-                key={item.id}
-                data={item}
-                isActive={activeId === item.id}
-                onClick={() => {
-                  setActiveId(item.id);
-                  setAutoPlay(false);
-                }}
-                isLeft={index % 2 === 0}
-              />
-            ))}
-          </div>
+            return (
+                <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 pb-24">
+                    {/* Header */}
+                    <header className="sticky top-0 w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm transition-all">
+                        <div className="max-w-5xl mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
+                            <div>
+                                <h1 className="text-lg md:text-2xl font-extrabold tracking-tight text-slate-900">
+                                    Evolução <span className="text-blue-600">SENAI</span>
+                                </h1>
+                            </div>
+                            
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => setAutoPlay(!autoPlay)}
+                                    className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
+                                        autoPlay 
+                                        ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
+                                        : 'bg-slate-900 text-white hover:bg-slate-800'
+                                    }`}
+                                >
+                                    {autoPlay ? 'Pausar' : 'Iniciar Tour'}
+                                    {autoPlay ? <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"/> : <IconArrowRight size={14} />}
+                                </button>
+                            </div>
+                        </div>
+                    </header>
 
-          {/* Footer Note */}
-          <div className="mt-8 text-center border-t border-slate-100 pt-8 pb-4">
-             <p className="text-xs text-slate-400 mb-2">
-               Fonte: Histórico de programas de eficiência produtiva (SENAI/MDIC).
-             </p>
-             <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-50 rounded-lg text-slate-500 text-xs hover:bg-slate-100 cursor-pointer transition-colors">
-               <Share2 size={14}/>
-               <span>Pronto para compartilhar</span>
-             </div>
-          </div>
+                    {/* Main Content */}
+                    <main className="pt-8 px-4 md:px-8 max-w-5xl mx-auto">
+                        
+                        <IntroSection />
 
-        </div>
-      </main>
+                        <div className="relative pl-4 md:pl-0">
+                            
+                            {/* Vertical Line Container */}
+                            <div className="absolute left-[19px] md:left-1/2 transform md:-translate-x-1/2 top-4 bottom-12 w-1 bg-slate-100 rounded-full">
+                                <div 
+                                    className="absolute top-0 w-full bg-blue-600 rounded-full transition-all duration-1000 ease-in-out"
+                                    style={{ height: `${((activeId - 0.5) / timelineData.length) * 100}%` }}
+                                />
+                            </div>
 
-      {/* Mobile-Optimized Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 md:hidden z-50 flex justify-between items-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-         <button 
-            onClick={() => {
-              setActiveId(prev => Math.max(1, prev - 1));
-              setAutoPlay(false);
-            }}
-            disabled={activeId === 1}
-            className="p-3 bg-slate-100 rounded-full disabled:opacity-30 active:scale-95 transition-transform"
-         >
-           <ChevronUp size={20}/>
-         </button>
-         
-         <div className="text-center">
-            <span className="text-xs font-bold text-slate-400 uppercase block mb-0.5">Navegar</span>
-            <span className="text-blue-600 font-bold">{activeId}</span>
-            <span className="text-slate-300 mx-1">/</span>
-            <span className="text-slate-500 text-sm">{timelineData.length}</span>
-         </div>
+                            {/* Timeline Items */}
+                            <div className="relative pb-12">
+                                {timelineData.map((item, index) => (
+                                    <TimelineCard 
+                                        key={item.id}
+                                        data={item}
+                                        isActive={activeId === item.id}
+                                        onClick={() => {
+                                            setActiveId(item.id);
+                                            setAutoPlay(false);
+                                        }}
+                                        isLeft={index % 2 === 0}
+                                    />
+                                ))}
+                            </div>
 
-         <button 
-            onClick={() => {
-              setActiveId(prev => Math.min(timelineData.length, prev + 1));
-              setAutoPlay(false);
-            }}
-            disabled={activeId === timelineData.length}
-            className="p-3 bg-slate-100 rounded-full disabled:opacity-30 active:scale-95 transition-transform"
-         >
-           <ChevronDown size={20}/>
-         </button>
-      </div>
+                            {/* Footer Note */}
+                            <div className="mt-8 text-center border-t border-slate-100 pt-8 pb-4">
+                                <p className="text-xs text-slate-400 mb-2">
+                                    Fonte: Histórico de programas de eficiência produtiva (SENAI/MDIC).
+                                </p>
+                                <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-50 rounded-lg text-slate-500 text-xs hover:bg-slate-100 cursor-pointer transition-colors">
+                                    <IconShare2 size={14}/>
+                                    <span>Pronto para compartilhar</span>
+                                </div>
+                            </div>
 
-    </div>
-  );
-};
+                        </div>
+                    </main>
 
-export default App;
+                    {/* Mobile-Optimized Bottom Nav */}
+                    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 md:hidden z-50 flex justify-between items-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                        <button 
+                            onClick={() => {
+                                setActiveId(prev => Math.max(1, prev - 1));
+                                setAutoPlay(false);
+                            }}
+                            disabled={activeId === 1}
+                            className="p-3 bg-slate-100 rounded-full disabled:opacity-30 active:scale-95 transition-transform"
+                        >
+                            <IconChevronUp size={20}/>
+                        </button>
+                        
+                        <div className="text-center">
+                            <span className="text-xs font-bold text-slate-400 uppercase block mb-0.5">Navegar</span>
+                            <span className="text-blue-600 font-bold">{activeId}</span>
+                            <span className="text-slate-300 mx-1">/</span>
+                            <span className="text-slate-500 text-sm">{timelineData.length}</span>
+                        </div>
+
+                        <button 
+                            onClick={() => {
+                                setActiveId(prev => Math.min(timelineData.length, prev + 1));
+                                setAutoPlay(false);
+                            }}
+                            disabled={activeId === timelineData.length}
+                            className="p-3 bg-slate-100 rounded-full disabled:opacity-30 active:scale-95 transition-transform"
+                        >
+                            <IconChevronDown size={20}/>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
